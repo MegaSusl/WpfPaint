@@ -5,9 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfPaint"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="1600"
+        Title="MainWindow" Height="950" Width="1600"
         ResizeMode="NoResize"
-        WindowStyle="ThreeDBorderWindow"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        Background="Transparent"
         >
     <Window.Resources>
         <Style TargetType="MenuItem">
@@ -18,49 +21,127 @@
             </Style.Resources>
         </Style>
     </Window.Resources>
-    
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
-        </Grid.RowDefinitions>
-        <Rectangle Grid.Row="0">
-            <Rectangle.Fill>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,2" SpreadMethod="Reflect">
-                    <GradientStop Color="HotPink" Offset="0.0"/>
-                    <GradientStop Color="Yellow" Offset="1.4"/>
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-        </Rectangle>
-        <Menu>
-            <!--<Menu.ItemsPanel>
-                --><!--<ItemsPanelTemplate>
-                    <DockPanel HorizontalAlignment="Center"/>
-                </ItemsPanelTemplate>--><!--
-            </Menu.ItemsPanel>-->
-            <MenuItem Header="File" Height="25" FontSize="12">
-                <MenuItem Header="New File"/>
-                <MenuItem Header="Save"/>
-                <MenuItem Header="Open"/>
-                <MenuItem Header="Exit"/>
-            </MenuItem>
-            <MenuItem Header="Info">
+    <Border CornerRadius="2"
+            BorderThickness="5"
+            >
+        <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,2" SpreadMethod="Reflect">
+                <GradientStop Color="HotPink" Offset="0.0"/>
+                <!--<GradientStop Color="Pink" Offset="0.6"/>-->
+                <GradientStop Color="Yellow" Offset="1.2"/>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,2" SpreadMethod="Reflect">
+                <GradientStop Color="HotPink" Offset="0.0"/>
+                <GradientStop Color="Yellow" Offset="1.2"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Grid>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+            
+            
+            <Rectangle Fill="Transparent" Grid.Row="0" Grid.RowSpan="3" MouseLeftButtonDown="RowDefinition_MouseLeftButtonDown"/>
+            <TextBlock Text="WPF Paint" Grid.Row="0" Width="75" Foreground="White" FontSize="16" FontFamily="Montserrat" VerticalAlignment="Center" Margin="10 0 0 0" HorizontalAlignment="Left" TextAlignment="Center"/>
+            <Button x:Name="minimizeBtn" Content="-" Grid.Row="0" Width="20" HorizontalAlignment="Right" Margin=" 0 0 25 2" Click="minimizeBtn_Click" BorderThickness="0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Coral"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightYellow"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="18" Height="18" CornerRadius="4"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button x:Name="closeBtn" Content="X" Grid.Row="0" Width="20" HorizontalAlignment="Right" Margin="0 0 0 2" Click="closeBtn_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Coral"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightYellow"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="18" Height="18" CornerRadius="4"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            
+            
+            
+            <Menu Grid.Row="1">
+                <MenuItem Header="File" Height="25" FontSize="12">
+                    <MenuItem Header="New File"/>
+                    <MenuItem Header="Save"/>
+                    <MenuItem Header="Open"/>
+                    <MenuItem Header="Exit"/>
+                </MenuItem>
+                <MenuItem Header="Info"/>
+            </Menu>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <StackPanel Width="200" Margin="20 0 0 0">
+                    <Grid Height="80">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <Button x:Name="PencilBtn" Content="P" Height="20" Width="20" Margin="0 3 0 3" Click="PencilBtn_Click"/>
+                            <Button x:Name="EraserBtn" Content="E1" Height="20" Width="20" Margin="0 3 0 3" Click="EraserBtn_Click"/>
+                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
+                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
+                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+
+
+            <InkCanvas Name="Canvas" Grid.Row="3" Background="White">
                 
-            </MenuItem>
+            </InkCanvas>
 
-        </Menu>
+            <StatusBar Grid.Row="4"/>
+        </Grid>
+    </Border>
 
-        <Canvas Grid.Row="2"/>
-
-
-        <StatusBar Grid.Row="3"/>
-    </Grid>
-    
-    
 </Window>
