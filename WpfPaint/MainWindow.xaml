@@ -1,9 +1,11 @@
 ﻿<Window x:Class="WpfPaint.MainWindow"
+        Name="myWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfPaint"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="MainWindow" Height="950" Width="1600"
         ResizeMode="NoResize"
@@ -11,6 +13,7 @@
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True"
         Background="Transparent"
+        Loaded="Window_Loaded"
         >
     <Window.Resources>
         <Style TargetType="MenuItem">
@@ -20,6 +23,7 @@
                 </Style>
             </Style.Resources>
         </Style>
+        
     </Window.Resources>
     <Border CornerRadius="2"
             BorderThickness="5"
@@ -101,7 +105,7 @@
             
             <Menu Grid.Row="1">
                 <MenuItem Header="File" Height="25" FontSize="12">
-                    <MenuItem Header="New File"/>
+                    <MenuItem Header="New File" Click="MenuItemNew_Click"/>
                     <MenuItem Header="Save"/>
                     <MenuItem Header="Open"/>
                     <MenuItem Header="Exit"/>
@@ -119,28 +123,39 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
-                            <Button x:Name="PencilBtn" Content="P" Height="20" Width="20" Margin="0 3 0 3" Click="PencilBtn_Click"/>
-                            <Button x:Name="EraserBtn" Content="E1" Height="20" Width="20" Margin="0 3 0 3" Click="EraserBtn_Click"/>
+                            <Button x:Name="PencilBtn" Content="P" Height="20" Width="20" Margin="0 3 0 3" Click="PencilBtn_Click">
+                                
+                            </Button>
+                            <Button x:Name="EraserBtn" Content="E" Height="20" Width="20" Margin="0 3 0 3" Click="EraserBtn_Click"/>
+                            <Button x:Name="EraserBtn2" Content="E2" Height="20" Width="20" Margin="0 3 0 3" Click="EraserBtn2_Click"/>
+                            <ToggleButton x:Name="Fill" Content="F" Height="20" Width="20" Margin="0 3 0 3" Click="Fill_Click" Visibility="Hidden"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Visibility="Hidden">
+                            <Button x:Name="RectBtn" Content="R" Height="20" Width="20" Margin="0 3 0 3" Click="RectBtn_Click"/>
+                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
                             <Button Height="20" Width="20" Margin="0 3 0 3"/>
                         </StackPanel>
-                        <StackPanel Grid.Column="1">
-                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
-                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
-                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
+                        <StackPanel Grid.Column="2">
+                            <xctk:ColorPicker x:Name="colorPick"  Grid.Column="3" Height="20" Width="40" Margin="0 3 0 0" SelectedColor="Black" SelectedColorChanged="ColorPicker_SelectedColorChanged"/>
+                            <Slider x:Name="SizeSilder" Value="1" Minimum="1" Maximum="30" Orientation="Vertical" HorizontalAlignment="Center" Height="55" ValueChanged="Slider_ValueChanged"/>
                         </StackPanel>
+                        
                     </Grid>
                 </StackPanel>
             </StackPanel>
 
 
-            <InkCanvas Name="Canvas" Grid.Row="3" Background="White">
+            <InkCanvas Name="Canvas" Grid.Row="3" Background="White" ActiveEditingModeChanged="Canvas_ActiveEditingModeChanged">
                 
             </InkCanvas>
 
-            <StatusBar Grid.Row="4"/>
+            <StatusBar x:Name="statusBar" Grid.Row="4">
+                <TextBlock x:Name="Sbox" Text="Mode:"/>
+            </StatusBar>
         </Grid>
     </Border>
 
