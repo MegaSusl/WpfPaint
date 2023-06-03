@@ -11,9 +11,10 @@
         ResizeMode="NoResize"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        AllowsTransparency="True"
+        AllowsTransparency="False"
         Background="Transparent"
         Loaded="Window_Loaded"
+        xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         >
     <Window.Resources>
         <Style TargetType="MenuItem">
@@ -23,10 +24,32 @@
                 </Style>
             </Style.Resources>
         </Style>
-        
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Pink"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border Width="18" Height="18" CornerRadius="4"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                              />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="LightYellow"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Border CornerRadius="2"
             BorderThickness="5"
+            
+            
             >
         <Border.BorderBrush>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,2" SpreadMethod="Reflect">
@@ -41,23 +64,25 @@
                 <GradientStop Color="Yellow" Offset="1.2"/>
             </LinearGradientBrush>
         </Border.Background>
-        <Grid>
+        
+        <Grid x:Name="grid">
             
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition x:Name="col"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="25"/>
                 <RowDefinition Height="80"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition x:Name="pictureRow" Height="*" MaxHeight="900"/>
                 <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
             
             
             <Rectangle Fill="Transparent" Grid.Row="0" Grid.RowSpan="3" MouseLeftButtonDown="RowDefinition_MouseLeftButtonDown"/>
-            <TextBlock Text="WPF Paint" Grid.Row="0" Width="75" Foreground="White" FontSize="16" FontFamily="Montserrat" VerticalAlignment="Center" Margin="10 0 0 0" HorizontalAlignment="Left" TextAlignment="Center"/>
+            <Image Source="Images/paint.png" Grid.Row="0" HorizontalAlignment="Left" Height="18" Width="20" Margin="5 0 0 2"/>
+            <TextBlock Text="WPF Paint" Grid.Row="0" Width="75" Foreground="White" FontSize="16" FontFamily="Montserrat" VerticalAlignment="Center" Margin="25 0 0 0" HorizontalAlignment="Left" TextAlignment="Center"/>
             <Button x:Name="minimizeBtn" Content="-" Grid.Row="0" Width="20" HorizontalAlignment="Right" Margin=" 0 0 25 2" Click="minimizeBtn_Click" BorderThickness="0">
                 <Button.Style>
                     <Style TargetType="Button">
@@ -106,11 +131,11 @@
             <Menu Grid.Row="1">
                 <MenuItem Header="File" Height="25" FontSize="12">
                     <MenuItem Header="New File" Click="MenuItemNew_Click"/>
-                    <MenuItem Header="Save"/>
-                    <MenuItem Header="Open"/>
-                    <MenuItem Header="Exit"/>
+                    <MenuItem Header="Save" Click="MenuItemSave_Click"/>
+                    <MenuItem Header="Open" Click="MenuItemOpen_Click"/>
+                    <MenuItem Header="Exit" Click="closeBtn_Click"/>
                 </MenuItem>
-                <MenuItem Header="Info"/>
+                <MenuItem Header="Info" Click="Info_Click"/>
             </Menu>
 
             <StackPanel Grid.Row="2" Orientation="Horizontal">
@@ -124,37 +149,62 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
-                            <Button x:Name="PencilBtn" Content="P" Height="20" Width="20" Margin="0 3 0 3" Click="PencilBtn_Click">
-                                
-                            </Button>
+                            <Button x:Name="PencilBtn"  Content="P" Height="20" Width="20" Margin="0 3 0 3" Click="PencilBtn_Click">
+                                 
+                            </Button>   
+
                             <Button x:Name="EraserBtn" Content="E" Height="20" Width="20" Margin="0 3 0 3" Click="EraserBtn_Click"/>
-                            <Button x:Name="EraserBtn2" Content="E2" Height="20" Width="20" Margin="0 3 0 3" Click="EraserBtn2_Click"/>
-                            <ToggleButton x:Name="Fill" Content="F" Height="20" Width="20" Margin="0 3 0 3" Click="Fill_Click" Visibility="Hidden"/>
+                            
+                            <Button x:Name="FillBtn" Content="F" Height="20" Width="20" Margin="0 3 0 3" Click="Fill_Click" Visibility="Visible"/>
                         </StackPanel>
-                        <StackPanel Grid.Column="1" Visibility="Hidden">
+                        <StackPanel Grid.Column="1" Visibility="Visible">
                             <Button x:Name="RectBtn" Content="R" Height="20" Width="20" Margin="0 3 0 3" Click="RectBtn_Click"/>
-                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
-                            <Button Height="20" Width="20" Margin="0 3 0 3"/>
+                            <Button x:Name="EllipseBtn" Content="El" Height="20" Width="20" Margin="0 3 0 3" Click="EllipseBtn_Click"/>
+                            <Button x:Name="LineBtn" Content="L" Height="20" Width="20" Margin="0 3 0 3" Click="LineBtn_Click"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2">
                             <xctk:ColorPicker x:Name="colorPick"  Grid.Column="3" Height="20" Width="40" Margin="0 3 0 0" SelectedColor="Black" SelectedColorChanged="ColorPicker_SelectedColorChanged"/>
-                            <Slider x:Name="SizeSilder" Value="1" Minimum="1" Maximum="30" Orientation="Vertical" HorizontalAlignment="Center" Height="55" ValueChanged="Slider_ValueChanged"/>
+                            <Slider x:Name="SizeSlider" Value="1" Minimum="1" Maximum="30" Orientation="Vertical" HorizontalAlignment="Center" Height="55" ValueChanged="Slider_ValueChanged"/>
                         </StackPanel>
                         
                     </Grid>
                 </StackPanel>
             </StackPanel>
 
-
-            <InkCanvas Name="Canvas" Grid.Row="3" Background="White" ActiveEditingModeChanged="Canvas_ActiveEditingModeChanged">
+            <wfi:WindowsFormsHost x:Name="pictureBoxHost" ToolTip="" Grid.Row="3" Grid.Column="0" Background="White" Loaded="pictureBoxHost_Loaded" ></wfi:WindowsFormsHost>
+       
+                <InkCanvas Visibility="Hidden" Name="Canvas" Grid.Row="4" Background="White" ActiveEditingModeChanged="Canvas_ActiveEditingModeChanged">
                 
             </InkCanvas>
 
             <StatusBar x:Name="statusBar" Grid.Row="4">
-                <TextBlock x:Name="Sbox" Text="Mode:"/>
+
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+
+                <StatusBarItem Grid.Column="0">
+                    <TextBlock x:Name="Sbox" Text="Mode: None"/>
+                </StatusBarItem>
+                <Separator Grid.Column="1"/>
+                <StatusBarItem Grid.Column="2">
+                    <TextBlock x:Name="StatusColor" Text="Color: Black"/>
+                </StatusBarItem>
             </StatusBar>
         </Grid>
     </Border>
